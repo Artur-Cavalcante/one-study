@@ -13,7 +13,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./server/nginx.conf:/etc/nginx/nginx.conf
+      - ./server/nginx.conf:/etc/nginx/nginx.conf --name server_volume
     depends_on:
       - frontend
       - backend
@@ -28,7 +28,7 @@ services:
     container_name: frontend
     restart: always
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app --name frontend_volume
     networks:
       - localdev
 
@@ -38,7 +38,7 @@ services:
     container_name: backend
     restart: always
     volumes:
-      - ./backend:/app
+      - ./backend:/app --name backend_volume
     depends_on:
       - backend_db
     networks:
@@ -52,7 +52,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./backend/server_data:/var/lib/postgresql/data
+      - ./backend/server_data:/var/lib/postgresql/data --name backend_db_volume
     networks:
       - localdev
 
@@ -74,7 +74,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./AuthServer/server_data:/var/lib/postgresql/data
+      - ./AuthServer/server_data:/var/lib/postgresql/data --name auth_server_db_volume
     networks:
       - localdev
 
@@ -96,6 +96,6 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./FlashCards/server_data:/var/lib/postgresql/data
+      - ./FlashCards/server_data:/var/lib/postgresql/data --name flashcards_db_volume
     networks:
       - localdev

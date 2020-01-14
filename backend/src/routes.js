@@ -1,8 +1,10 @@
 const express = require("express");
 const UserController = require("./controllers/UserController");
+const BookController = require("./controllers/BookController");
 const VirtualDocController = require("./controllers/VirtualDocController");
 const BoardController = require("./controllers/BoardController");
 const TaskController = require("./controllers/TaskController");
+const ApiRoutes = require("./contracts/ApiRoutes");
 
 const routes = express.Router();
 
@@ -10,18 +12,22 @@ routes.get("/", (req, res) => {
   return res.json({ hello: "world" });
 });
 
-routes.get("/users", UserController.all);
-routes.post("/users", UserController.store);
-routes.get("/users/:user_id", UserController.index);
 
-routes.post("/virtual_docs", VirtualDocController.store);
-routes.get("/virtual_docs", VirtualDocController.allByUser);
-routes.get("/virtual_docs/:vDoc_id", VirtualDocController.index);
+routes.get(ApiRoutes.users.all, UserController.all);
+routes.get(ApiRoutes.users.index, UserController.index);
+routes.post(ApiRoutes.users.create, UserController.store);
 
-routes.post("/boards", BoardController.store);
-routes.get("/boards", BoardController.allByUser);
-routes.get("/boards/:board_id", BoardController.index);
-routes.post("/boards/:board_id/tasks", TaskController.store);
-routes.get("/boards/:board_id/tasks", TaskController.allByBoard);
+routes.post(ApiRoutes.books.create, BookController.store);
+routes.get(ApiRoutes.books.allByUser, BookController.allByUser);
+routes.get(ApiRoutes.books.index, BookController.index);
+routes.get(ApiRoutes.books.allVirtualDocs, VirtualDocController.allByBook);
+routes.post(ApiRoutes.virtual_doc.create, VirtualDocController.store);
+
+routes.get(ApiRoutes.boards.index, BoardController.index);
+routes.get(ApiRoutes.boards.allByUser, BoardController.allByUser);
+routes.post(ApiRoutes.boards.create, BoardController.store);
+
+routes.post(ApiRoutes.tasks.store, TaskController.store);
+routes.get(ApiRoutes.tasks.allByBoard, TaskController.allByBoard);
 
 module.exports = routes;

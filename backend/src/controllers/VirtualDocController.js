@@ -1,49 +1,31 @@
-const User = require("../models/User");
+const Book = require("../models/Book");
 const VirtualDoc = require("../models/VirtualDoc");
 
 module.exports = {
-  async index(req, res) {
-    const { vDoc_id } = req.params;
-    const vDoc = await VirtualDoc.findByPk(vDoc_id, {
-      where: {
-        user_id: req.user.id
-      }
+  async allByBook(req, res) {
+    const { book_id } = req.params;
+
+    const book = await Book.findByPk(book_id, {
+      include: { association: "vDocs" }
     });
 
-    if (!vDoc) return res.status(404).json({ error: "Document not found" });
-
-    return res.json(vDoc);
-  },
-
-  async allByUser(req, res) {
-    const user_id = req.user.id;
-
-    const user = await User.findByPk(user_id, {
-      include: {
-        association: "virtual_docs",
-        attributes: ["id", "title", "body", "created_at", "updated_at"]
-      }
-    });
-
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    return res.json(user.virtual_docs);
+    return res.json(book.vDocs);
   },
 
   async store(req, res) {
-    const user_id = req.user.id;
-    const { title, body } = req.body;
+    const { book_id } = req.params;
+    const { title, detail } = req.body;
 
-    const user = await User.findByPk(user_id);
+    const book = await Book.findByPk(book_id);
 
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!book) return res.status(400).json({ error: "Book not found" });
 
-    const virtual_doc = await VirtualDoc.create({
+    const vDoc = await VirtualDoc.create({
       title,
-      body,
-      user_id
+      detail,
+      book_id
     });
 
-    return res.status(201).json(virtual_doc);
+    return res.status(201).json(vDoc);
   }
 };

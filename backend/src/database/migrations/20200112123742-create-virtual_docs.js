@@ -9,10 +9,10 @@ module.exports = {
         autoIncrement: true,
         allowNull: false
       },
-      user_id: {
-        type: Sequelize.TEXT,
+      book_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "users", key: "id" },
+        references: { model: "books", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },

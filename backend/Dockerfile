@@ -6,4 +6,6 @@ COPY . ./
 
 RUN yarn
 
+RUN yarn test
+
 CMD ["yarn", "dev"]
